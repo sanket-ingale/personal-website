@@ -1,0 +1,427 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------- */
+/* Design tokens — "control plane"    */
+/* ---------------------------------- */
+:root {
+  --accent: #f97316;
+  /* user-pickable, persisted in localStorage */
+  /* Neutrals are mixed from the accent so the whole palette follows it */
+  --surface: color-mix(in srgb, var(--accent) 4%, #f7f8f9);
+  --panel: color-mix(in srgb, var(--accent) 2%, #ffffff);
+  --ink: color-mix(in srgb, var(--accent) 6%, #14181f);
+  --muted: color-mix(in srgb, var(--accent) 9%, #4a525e);
+  --line: color-mix(in srgb, var(--accent) 12%, #d7dbe2);
+  --signal: color-mix(in srgb, var(--accent) 82%, black);
+  --status: #18a05a;
+}
+
+.dark {
+  --surface: color-mix(in srgb, var(--accent) 6%, #0c0f14);
+  --panel: color-mix(in srgb, var(--accent) 8%, #10141b);
+  --ink: color-mix(in srgb, var(--accent) 5%, #e9ebef);
+  --muted: color-mix(in srgb, var(--accent) 12%, #97a0af);
+  --line: color-mix(in srgb, var(--accent) 16%, #252c39);
+  --signal: color-mix(in srgb, var(--accent) 78%, white);
+  --status: #2cc57a;
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-signal: var(--signal);
+  --color-status: var(--status);
+
+  --font-display: "Space Grotesk Variable", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease;
+}
+
+::selection {
+  background: var(--signal);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------- */
+/* Mono telemetry label               */
+/* ---------------------------------- */
+.telemetry {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--status);
+  display: inline-block;
+  flex: none;
+}
+
+.status-dot--pulse {
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--status) 45%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 5px transparent;
+  }
+}
+
+/* ---------------------------------- */
+/* Scroll-driven reveals (CSS-only)   */
+/* ---------------------------------- */
+@keyframes divider-draw {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes eyebrow-in {
+  from {
+    opacity: 0;
+    translate: -0.75rem 0;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.section-divider {
+  height: 1px;
+  background: var(--line);
+  transform-origin: left center;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section-divider {
+      animation: divider-draw 1s linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+
+    .section-eyebrow {
+      animation: eyebrow-in 1s ease both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+/* ---------------------------------- */
+/* View Transitions — theme sweep     */
+/* ---------------------------------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 0;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .status-dot--pulse {
+    animation: none;
+  }
+}
+
+/* ---------------------------------- */
+/* Pointer lens: hue tint + grid      */
+/* ---------------------------------- */
+.glow-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  /* under the sticky header (z-20), over content */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  --mx: -500px;
+  --my: -500px;
+  --glow-h: 27;
+  --glow-r: 120px;
+  /* animated by JS: velocity flare + idle breathing */
+  /* Color tint that drifts through hues as the pointer moves */
+  background: radial-gradient(var(--glow-r) circle at var(--mx) var(--my),
+      hsl(var(--glow-h) 95% 55% / 0.15),
+      transparent 70%);
+}
+
+/* Blueprint dot-grid inside the lens. Two interleaved grids beat like
+   hearts on different rhythms — neighbouring dots are never in step,
+   so they read as separate living things. Driven by the lens rAF loop. */
+.glow-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  --dot-r1: 1px;
+  --dot-a1: 0.55;
+  --dot-r2: 1.4px;
+  --dot-a2: 0.4;
+  background-image:
+    radial-gradient(circle,
+      hsl(var(--glow-h) 80% 50% / var(--dot-a1)) var(--dot-r1),
+      transparent calc(var(--dot-r1) + 0.5px)),
+    radial-gradient(circle,
+      hsl(var(--glow-h) 80% 50% / var(--dot-a2)) var(--dot-r2),
+      transparent calc(var(--dot-r2) + 0.5px));
+  background-size: 18px 18px, 18px 18px;
+  background-position: 0 0, 9px 9px;
+  -webkit-mask-image: radial-gradient(calc(var(--glow-r) * 0.92) circle at var(--mx) var(--my),
+      black,
+      transparent 75%);
+  mask-image: radial-gradient(calc(var(--glow-r) * 0.92) circle at var(--mx) var(--my),
+      black,
+      transparent 75%);
+}
+
+/* Tap pulse ring (touch) */
+.tap-pulse {
+  position: fixed;
+  z-index: 15;
+  pointer-events: none;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--signal);
+  animation: tap-pulse 0.6s ease-out forwards;
+}
+
+@keyframes tap-pulse {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(9);
+  }
+}
+
+/* ---------------------------------- */
+/* Footer signal trace                */
+/* ---------------------------------- */
+.footer-trace-base {
+  color: var(--line);
+}
+
+.footer-trace-pulse {
+  color: var(--signal);
+  stroke-dasharray: 0.16 0.84;
+  animation: trace-travel 4s linear infinite;
+}
+
+@keyframes trace-travel {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-trace-pulse {
+    display: none;
+  }
+}
+
+/* ---------------------------------- */
+/* Clipped spotlight surfaces          */
+/* (work cards, header, footer)        */
+/* ---------------------------------- */
+[data-spotlight] {
+  position: relative;
+}
+
+[data-spotlight]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(170px circle at var(--cx, 50%) var(--cy, 50%),
+      color-mix(in srgb, var(--signal) 15%, transparent),
+      transparent 70%);
+}
+
+[data-spotlight]:hover::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-spotlight]::after {
+    transition: none;
+  }
+}
+
+
+/* Mobile scroll progress hairline under the header (CSS-only) */
+.scroll-progress {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 1.5px;
+  width: 100%;
+  background: var(--signal);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    animation: progress-grow linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+
+/* Mobile dock: tabs fade out at the clipped edges of the scroll area.
+   Where scroll-driven animations are supported, each edge's fade releases
+   when fully scrolled to that end (no fade where there's nothing hidden);
+   elsewhere both edges fade statically. */
+@property --dock-fade-l {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 18px;
+}
+
+@property --dock-fade-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 18px;
+}
+
+.dock-fade {
+  mask-image: linear-gradient(to right,
+      transparent,
+      #000 var(--dock-fade-l),
+      #000 calc(100% - var(--dock-fade-r)),
+      transparent);
+}
+
+@supports (animation-timeline: scroll()) {
+  .dock-fade {
+    animation: dock-edge-fade linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+
+@keyframes dock-edge-fade {
+  0% {
+    --dock-fade-l: 0px;
+    --dock-fade-r: 18px;
+  }
+
+  20%,
+  80% {
+    --dock-fade-l: 18px;
+    --dock-fade-r: 18px;
+  }
+
+  100% {
+    --dock-fade-l: 18px;
+    --dock-fade-r: 0px;
+  }
+}
+
+
+
+/* ---------------------------------- */
+/* Liquid Glass (header bar + dock)   */
+/* Transparent; Chromium gets true    */
+/* edge refraction via JS-built       */
+/* feDisplacementMap (liquidGlass.ts) */
+/* ---------------------------------- */
+.liquid-glass {
+  background: color-mix(in srgb, var(--surface) 12%, transparent);
+  -webkit-backdrop-filter: blur(2px) saturate(1.8);
+  backdrop-filter: blur(2px) saturate(1.8);
+  border: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+}
+
+.liquid-glass--bar {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--surface) 45%, transparent);
+  -webkit-backdrop-filter: blur(8px) saturate(1.8);
+  backdrop-filter: blur(8px) saturate(1.8);
+}
+
+/* Stronger glass for the dock: same refraction, but enough tint, blur
+   and shadow to separate from whatever it floats over. No white bloom —
+   the shadow is ink-based. */
+.liquid-glass--strong {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(1.8);
+  backdrop-filter: blur(10px) saturate(1.8);
+  border-color: color-mix(in srgb, var(--line) 95%, transparent);
+  /* box-shadow: 0 10px 28px color-mix(in srgb, var(--ink) 22%, transparent); */
+}
