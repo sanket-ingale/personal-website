@@ -22,10 +22,8 @@ export function applyAccent(color: string) {
  */
 export function ThemeMenu({
   drop = "down",
-  pill = false,
 }: {
   drop?: "down" | "up";
-  pill?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(() =>
@@ -98,7 +96,7 @@ export function ThemeMenu({
         onClick={() => setOpen((o) => !o)}
         aria-label="Theme and accent color"
         aria-expanded={open}
-        className={`inline-flex h-9 w-9 items-center justify-center border border-line text-muted transition-colors hover:border-signal hover:text-signal ${pill ? "rounded-full" : "rounded-md"}`}
+        className={`inline-flex h-9 w-9 items-center justify-center border border-line text-muted transition-colors hover:border-signal hover:text-signal rounded-full`}
       >
         <Palette size={16} />
       </button>

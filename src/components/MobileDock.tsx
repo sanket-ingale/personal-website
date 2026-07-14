@@ -42,7 +42,7 @@ export function MobileDock() {
           ))}
         </div>
         {/* <span aria-hidden="true" className="h-5 w-px shrink-0 bg-line" /> */}
-        <ThemeMenu drop="up" pill />
+        <ThemeMenu drop="up" />
       </div>
     </nav>
   );

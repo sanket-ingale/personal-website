@@ -44,14 +44,12 @@ export function Header() {
               href={`#${id}`}
               onClick={smoothScrollTo}
               aria-current={active === id ? "true" : undefined}
-              className={`telemetry relative z-10 rounded-full px-3 py-1.5 capitalize transition-colors hover:text-signal ${
-                active === id ? "!text-signal" : ""
-              }`}
+              className={`telemetry relative z-10 rounded-full px-3 py-1.5 capitalize transition-colors hover:text-signal ${active === id ? "!text-signal" : ""
+                }`}
             >
               {id}
             </a>
           ))}
-          <span className="mx-1.5 h-5 w-px bg-line" aria-hidden="true" />
           <ThemeMenu />
         </nav>
       </div>
