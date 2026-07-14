@@ -42,7 +42,11 @@ export function SignalTrace() {
 }
 
 /** Live local time — tells visitors your timezone at the moment they reach out. */
-export function LocalTime() {
+export function LocalTime({
+  inFooter = false,
+}: {
+  inFooter?: boolean;
+}) {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -68,7 +72,7 @@ export function LocalTime() {
   });
 
   return (
-    <span className="telemetry">
+    <span className={`${inFooter && "hidden sm:inline-block"} telemetry`}>
       {profile.location} — {time} IST
     </span>
   );

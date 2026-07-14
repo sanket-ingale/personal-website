@@ -156,7 +156,7 @@ export function Contact() {
           <span className="telemetry">
             © {new Date().getFullYear()} {profile.name}
           </span>
-          <LocalTime />
+          <LocalTime inFooter />
         </div>
       </footer>
     </Section>

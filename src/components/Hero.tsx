@@ -60,13 +60,14 @@ export function Header() {
 
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden mt-24 mb-6 sm:my-0">
-      {/* The fidget: grab a node and fling it. Subtle on mobile — present,
-          but under the hero rather than competing with it. */}
-      <MeshCanvas className="absolute inset-0 opacity-45 sm:opacity-100" />
-      {/* Readability scrim: fades the mesh behind the text. */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-surface via-surface/70 to-transparent" />
-      <div className="pointer-events-none relative mx-auto w-full max-w-3xl px-7 pb-16 pt-16 sm:px-8 sm:pb-32 sm:pt-28">
+    <section id="top" className="relative overflow-hidden">
+      {/* The fidget: grab a node and fling it. On mobile it lives in a clear
+          band above the text instead of hiding behind it. */}
+      <MeshCanvas className="absolute inset-x-0 top-0 bottom-[35%] opacity-70 sm:bottom-0 sm:opacity-100" />
+      {/* Readability scrim: fades the mesh behind the text. Vertical on
+          mobile (text at the bottom), left-to-right from sm: up. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-surface via-surface/70 to-transparent sm:bg-gradient-to-r" />
+      <div className="pointer-events-none relative mx-auto w-full max-w-3xl px-7 pb-16 pt-44 sm:px-8 sm:pb-32 sm:pt-28">
         <h1 className="font-display text-[13vw] font-medium leading-[0.95] tracking-tight sm:text-7xl">
           Sanket
           <br />
