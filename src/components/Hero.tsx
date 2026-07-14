@@ -25,7 +25,7 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-7 sm:px-8">
         <a href="#top" onClick={smoothScrollTo} className="flex items-center gap-2">
           <span className="status-dot status-dot--pulse" />
-          <span className="telemetry !text-ink">sanket.ingale</span>
+          <span className="telemetry !text-ink">sanketingale.in</span>
         </a>
         <span className="sm:hidden">
           <LocalTime />
