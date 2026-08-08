@@ -8,7 +8,7 @@ export default function App() {
     <div className="min-h-screen">
       <CursorGlow />
       <Header />
-      <main className="pb-28 sm:pb-0">
+      <main className="pb-20 sm:pb-0">
         <Hero />
         <About />
         <Experience />

@@ -3,9 +3,11 @@ import { useEffect, useRef } from "react";
 /**
  * Pointer lens with physicality:
  * - Weight: the lens lerps toward the cursor instead of sticking to it.
- * - Velocity flare: radius and hue drift scale with cursor speed.
+ * - Velocity flare: radius scales with cursor speed.
  * - Idle breathing: at rest the radius gently oscillates.
- * - Spotlight surfaces ([data-spotlight]) get local glow coordinates.
+ * - Spotlight surfaces ([data-spotlight], e.g. cards and game tiles) get
+ *   local glow coordinates for their own clipped glow, and sit above this
+ *   global lens in z-index so their background occludes it naturally.
  * - Touch: follows the finger, fades on lift; quick tap fires a pulse ring.
  * - prefers-reduced-motion: static lens follows the pointer directly,
  *   no loop, no breathing, no pulses.
@@ -25,12 +27,6 @@ export function CursorGlow() {
     let cx = -500;
     let cy = -500;
     let radius = 120;
-    let hue = 27; // starts near the default orange accent
-    // Two dot groups with independent heartbeats (see index.css).
-    let dotR1 = 1;
-    let dotA1 = 0.55;
-    let dotR2 = 1;
-    let dotA2 = 0.55;
     let raf = 0;
     let running = false;
     let visible = false;
@@ -43,11 +39,6 @@ export function CursorGlow() {
       layer.style.setProperty("--mx", `${cx}px`);
       layer.style.setProperty("--my", `${cy}px`);
       layer.style.setProperty("--glow-r", `${radius}px`);
-      layer.style.setProperty("--glow-h", `${hue}`);
-      layer.style.setProperty("--dot-r1", `${dotR1}px`);
-      layer.style.setProperty("--dot-a1", `${dotA1}`);
-      layer.style.setProperty("--dot-r2", `${dotR2}px`);
-      layer.style.setProperty("--dot-a2", `${dotA2}`);
     };
 
     const loop = (t: number) => {
@@ -64,26 +55,6 @@ export function CursorGlow() {
       // Idle breathing once the lens has caught up.
       const breath = speed < 2 ? Math.sin(t * 0.0016) * 8 : 0;
       radius += (120 + flare + breath - radius) * 0.12;
-
-      // Hue drifts faster with motion, trickles while idle.
-      hue = (hue + 0.08 + Math.min(2.5, speed * 0.06)) % 360;
-
-      // Two heartbeats (lub-DUB ... rest) on different periods so the
-      // interleaved dot groups drift in and out of phase — separate
-      // entities, never a synced blink. Both quicken with cursor speed.
-      const bpmScale = 1 + Math.min(0.5, speed * 0.012);
-      const heartbeat = (period: number, shift: number) => {
-        const phase = (((t * bpmScale) / period + shift) % 1) + 0;
-        const lub = Math.exp(-((phase - 0.12) ** 2) / 0.002);
-        const dub = 0.55 * Math.exp(-((phase - 0.32) ** 2) / 0.003);
-        return lub + dub;
-      };
-      const b1 = heartbeat(950, 0);
-      const b2 = heartbeat(1250, 0.5);
-      dotR1 = 1 + b1 * 1.25;
-      dotA1 = 0.45 + b1 * 0.45;
-      dotR2 = 1 + b2 * 1.25;
-      dotA2 = 0.45 + b2 * 0.45;
 
       write();
       raf = requestAnimationFrame(loop);
@@ -125,8 +96,10 @@ export function CursorGlow() {
       show();
       if (e.pointerType !== "mouse") clearTimeout(touchFade);
 
-      // Spotlight surfaces (cards, header, footer): local coordinates so
-      // their ::after glow clips to their own bounds.
+      // Spotlight surfaces (cards, game tiles, header): local coordinates
+      // for their own clipped ::after glow. They sit above this global
+      // lens in z-index (see [data-spotlight] in index.css), so their own
+      // opaque background naturally occludes it — no need to hide it.
       const spot = (e.target as Element | null)?.closest?.("[data-spotlight]") as HTMLElement | null;
       if (spot) {
         const r = spot.getBoundingClientRect();

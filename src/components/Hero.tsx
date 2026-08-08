@@ -76,25 +76,6 @@ export function Hero() {
         <p className="mt-6 max-w-md text-base text-muted sm:text-lg">
           {profile.tagline}
         </p>
-        <div className="pointer-events-auto mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-          {profile.links.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              target="_blank"
-              rel="noreferrer"
-              className="telemetry !text-ink underline decoration-line underline-offset-4 transition-colors hover:!text-signal hover:decoration-signal"
-            >
-              {l.label}
-            </a>
-          ))}
-          <a
-            href={`mailto:${profile.email}`}
-            className="telemetry !text-ink underline decoration-line underline-offset-4 transition-colors hover:!text-signal hover:decoration-signal"
-          >
-            Email
-          </a>
-        </div>
       </div>
     </section>
   );

@@ -1,7 +1,8 @@
 import { education, experience, profile, projects, skills } from "@/data/content";
-import { ChevronDown } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { Section, Tag } from "@/components/Section";
-import { LocalTime, SignalTrace } from "@/components/Footer";
+import { LocalTime } from "@/components/Footer";
+import { TicTacToe } from "@/components/TicTacToe";
 
 export function About() {
   return (
@@ -138,27 +139,51 @@ export function Skills() {
 export function Contact() {
   return (
     <Section id="contact" label="CONTACT">
-      <h2 className="font-display text-3xl font-medium tracking-tight sm:text-4xl">
-        Let's build something.
-      </h2>
-      <p className="mt-4 max-w-md text-muted">
-        Open to full-stack problems involving dense data and demanding users.
-      </p>
-      <a
-        href={`mailto:${profile.email}`}
-        className="mt-6 inline-flex items-center gap-2 rounded-md border border-line bg-panel px-4 py-2.5 font-mono text-sm transition-colors hover:border-signal hover:text-signal"
-      >
-        {profile.email}
-      </a>
-      <footer className="mt-16 space-y-5 pt-6">
-        <SignalTrace />
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="telemetry">
-            © {new Date().getFullYear()} {profile.name}
-          </span>
-          <LocalTime inFooter />
+      <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:gap-10">
+        <div className="order-1 flex flex-col justify-between gap-6">
+          <div>
+            <h2 className="font-display text-3xl font-medium tracking-tight sm:text-4xl">
+              Let's build something.
+            </h2>
+            <p className="mt-4 max-w-md text-muted">
+              Open to full-stack problems involving dense data and demanding users.
+            </p>
+          </div>
+          <div>
+            <a
+              href={`mailto:${profile.email}`}
+              className="inline-flex items-center gap-2 rounded-md border border-line bg-panel px-4 py-2.5 font-mono text-sm transition-colors hover:border-signal hover:text-signal"
+            >
+              {profile.email}
+            </a>
+            <div className="mt-5 flex items-center gap-8">
+              {profile.links.map((l) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="telemetry inline-flex items-center gap-0.5 transition-colors hover:!text-signal"
+                >
+                  {l.label}
+                  <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
-      </footer>
+        <div className="order-2 border-t sm:border-none border-line pt-6">
+          <TicTacToe />
+        </div>
+        <footer className="order-3 border-t border-line pt-6 sm:col-span-2 sm:pt-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="telemetry">
+              © {new Date().getFullYear()} {profile.name}
+            </span>
+            <LocalTime inFooter />
+          </div>
+        </footer>
+      </div>
     </Section>
   );
 }

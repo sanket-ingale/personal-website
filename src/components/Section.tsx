@@ -27,7 +27,7 @@ export function Section({
 /** Mono tech tag, shadcn-badge flavored. */
 export function Tag({ children }: { children: ReactNode }) {
   return (
-    <span className="rounded-sm border border-line bg-panel px-2 py-0.5 font-mono text-xs text-ink/85">
+    <span className="relative z-[16] rounded-sm border border-line bg-panel px-2 py-0.5 font-mono text-xs text-ink/85">
       {children}
     </span>
   );

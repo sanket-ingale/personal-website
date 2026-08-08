@@ -13,10 +13,11 @@ export const profile = {
   links: [
     { label: "GitHub", href: "https://github.com/sanket-ingale" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/sanket-ingale1998" },
+    { label: "Instagram", href: "https://www.instagram.com/lightbuster_/" },
   ],
   about: [
     "I build the interfaces that operators rely on to run complex systems — private cellular networks, compliance platforms, and AI governance tools. My work runs from orchestration dashboards and real-time visualizations down to the APIs and data flows behind them.",
-    "Over five years across startups and enterprise teams, I've led product engineering end to end — architecture, component libraries, APIs, performance, and mentoring — across React, TypeScript, Node, and Python.",
+    "Over five years across startups and enterprise teams, I've led product engineering end to end — architecture, component libraries, APIs, performance, and mentoring — across React, TypeScript, Node, and Python."
   ],
 };
 

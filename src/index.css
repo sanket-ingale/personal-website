@@ -173,7 +173,7 @@ body {
 }
 
 /* ---------------------------------- */
-/* Pointer lens: hue tint + grid      */
+/* Pointer lens: accent glow          */
 /* ---------------------------------- */
 .glow-layer {
   position: fixed;
@@ -185,41 +185,11 @@ body {
   transition: opacity 0.4s ease;
   --mx: -500px;
   --my: -500px;
-  --glow-h: 27;
   --glow-r: 120px;
   /* animated by JS: velocity flare + idle breathing */
-  /* Color tint that drifts through hues as the pointer moves */
   background: radial-gradient(var(--glow-r) circle at var(--mx) var(--my),
-      hsl(var(--glow-h) 95% 55% / 0.15),
+      color-mix(in srgb, var(--accent) 18%, transparent),
       transparent 70%);
-}
-
-/* Blueprint dot-grid inside the lens. Two interleaved grids beat like
-   hearts on different rhythms — neighbouring dots are never in step,
-   so they read as separate living things. Driven by the lens rAF loop. */
-.glow-layer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  --dot-r1: 1px;
-  --dot-a1: 0.55;
-  --dot-r2: 1.4px;
-  --dot-a2: 0.4;
-  background-image:
-    radial-gradient(circle,
-      hsl(var(--glow-h) 80% 50% / var(--dot-a1)) var(--dot-r1),
-      transparent calc(var(--dot-r1) + 0.5px)),
-    radial-gradient(circle,
-      hsl(var(--glow-h) 80% 50% / var(--dot-a2)) var(--dot-r2),
-      transparent calc(var(--dot-r2) + 0.5px));
-  background-size: 18px 18px, 18px 18px;
-  background-position: 0 0, 9px 9px;
-  -webkit-mask-image: radial-gradient(calc(var(--glow-r) * 0.92) circle at var(--mx) var(--my),
-      black,
-      transparent 75%);
-  mask-image: radial-gradient(calc(var(--glow-r) * 0.92) circle at var(--mx) var(--my),
-      black,
-      transparent 75%);
 }
 
 /* Tap pulse ring (touch) */
@@ -248,19 +218,32 @@ body {
 }
 
 /* ---------------------------------- */
-/* Footer signal trace                */
+/* Tic-tac-toe                        */
 /* ---------------------------------- */
-.footer-trace-base {
-  color: var(--line);
+@keyframes mark-in {
+  from {
+    scale: 0.5;
+    opacity: 0;
+  }
+
+  to {
+    scale: 1;
+    opacity: 1;
+  }
 }
 
-.footer-trace-pulse {
+.ttt-mark {
+  animation: mark-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.ttt-win-line {
   color: var(--signal);
-  stroke-dasharray: 0.16 0.84;
-  animation: trace-travel 4s linear infinite;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: win-line-draw 0.4s ease-out both;
 }
 
-@keyframes trace-travel {
+@keyframes win-line-draw {
   from {
     stroke-dashoffset: 1;
   }
@@ -270,18 +253,54 @@ body {
   }
 }
 
+@keyframes winner-cell-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--signal) 45%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+.ttt-winner-cell {
+  animation: winner-cell-pulse 0.9s ease-in-out 2;
+}
+
+.ttt-status {
+  animation: eyebrow-in 0.3s ease both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .footer-trace-pulse {
-    display: none;
+  .ttt-mark {
+    animation: none;
+  }
+
+  .ttt-win-line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .ttt-winner-cell {
+    animation: none;
+  }
+
+  .ttt-status {
+    animation: none;
   }
 }
 
 /* ---------------------------------- */
 /* Clipped spotlight surfaces          */
-/* (work cards, header, footer)        */
+/* (work cards, tic-tac-toe, header)   */
 /* ---------------------------------- */
 [data-spotlight] {
   position: relative;
+  /* Above the fixed cursor glow (z-15) so its own opaque background
+     occludes the glow instead of the glow washing over its text. */
+  z-index: 16;
 }
 
 [data-spotlight]::after {
