@@ -128,7 +128,7 @@ export function TicTacToe() {
               onClick={() => handleCellClick(i)}
               disabled={!playable}
               aria-label={`Cell ${i + 1}${cell ? `, ${cell}` : ", empty"}`}
-              className={`group relative flex aspect-square items-center justify-center rounded-md border bg-surface transition-colors ${playable ? "cursor-pointer hover:border-signal" : ""
+              className={`group relative flex aspect-square items-center justify-center rounded-md border bg-panel transition-colors ${playable ? "cursor-pointer hover:border-signal" : ""
                 } ${line?.includes(i) ? "ttt-winner-cell border-signal" : "border-line"}`}
             >
               {cell === "X" && (
