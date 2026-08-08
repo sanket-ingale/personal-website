@@ -154,7 +154,7 @@ export function TicTacToe() {
           );
         })}
         {line && (
-          <svg viewBox="0 0 3 3" className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <svg viewBox="0 0 3 3" className="pointer-events-none absolute inset-0 z-[20]" aria-hidden="true">
             <path
               className="ttt-win-line"
               d={`M ${cellCenter(line[0]).x} ${cellCenter(line[0]).y} L ${cellCenter(line[2]).x} ${cellCenter(line[2]).y}`}
