@@ -83,18 +83,22 @@ body {
 }
 
 .status-dot--pulse {
-  animation: pulse-dot 2.4s ease-in-out infinite;
+  --pulse-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  --pulse-spread: 5px;
+  animation: pulse-ring 2.4s ease-in-out infinite;
 }
 
-@keyframes pulse-dot {
+/* Shared by .status-dot--pulse and .ttt-winner-cell — a box-shadow ring
+   that blooms out and fades, parameterized by color/spread/timing. */
+@keyframes pulse-ring {
 
   0%,
   100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
+    box-shadow: 0 0 0 0 var(--pulse-color);
   }
 
   50% {
-    box-shadow: 0 0 0 5px transparent;
+    box-shadow: 0 0 0 var(--pulse-spread) transparent;
   }
 }
 
@@ -168,6 +172,12 @@ body {
   }
 
   .status-dot--pulse {
+    animation: none;
+  }
+
+  /* JS already never creates .tap-pulse elements under reduced motion
+     (CursorGlow.tsx); this is a defensive CSS backstop. */
+  .tap-pulse {
     animation: none;
   }
 }
@@ -253,20 +263,10 @@ body {
   }
 }
 
-@keyframes winner-cell-pulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--signal) 45%, transparent);
-  }
-
-  50% {
-    box-shadow: 0 0 0 6px transparent;
-  }
-}
-
 .ttt-winner-cell {
-  animation: winner-cell-pulse 0.9s ease-in-out 2;
+  --pulse-color: color-mix(in srgb, var(--signal) 45%, transparent);
+  --pulse-spread: 6px;
+  animation: pulse-ring 0.9s ease-in-out 2;
 }
 
 .ttt-status {
@@ -294,7 +294,7 @@ body {
 
 /* ---------------------------------- */
 /* Clipped spotlight surfaces          */
-/* (work cards, tic-tac-toe, header)   */
+/* (work cards, tic-tac-toe tiles)     */
 /* ---------------------------------- */
 [data-spotlight] {
   position: relative;
@@ -340,9 +340,11 @@ body {
 }
 
 @supports (animation-timeline: scroll()) {
-  .scroll-progress {
-    animation: progress-grow linear both;
-    animation-timeline: scroll(root);
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-progress {
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root);
+    }
   }
 }
 
@@ -382,9 +384,11 @@ body {
 }
 
 @supports (animation-timeline: scroll()) {
-  .dock-fade {
-    animation: dock-edge-fade linear both;
-    animation-timeline: scroll(self inline);
+  @media (prefers-reduced-motion: no-preference) {
+    .dock-fade {
+      animation: dock-edge-fade linear both;
+      animation-timeline: scroll(self inline);
+    }
   }
 }
 
@@ -415,29 +419,26 @@ body {
 /* feDisplacementMap (liquidGlass.ts) */
 /* ---------------------------------- */
 .liquid-glass {
+  --glass-blur: 2px;
   background: color-mix(in srgb, var(--surface) 12%, transparent);
-  -webkit-backdrop-filter: blur(2px) saturate(1.8);
-  backdrop-filter: blur(2px) saturate(1.8);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
   border: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
 }
 
 .liquid-glass--bar {
+  --glass-blur: 8px;
   border-left: 0;
   border-right: 0;
   border-top: 0;
   border-radius: 0;
   background: color-mix(in srgb, var(--surface) 45%, transparent);
-  -webkit-backdrop-filter: blur(8px) saturate(1.8);
-  backdrop-filter: blur(8px) saturate(1.8);
 }
 
-/* Stronger glass for the dock: same refraction, but enough tint, blur
-   and shadow to separate from whatever it floats over. No white bloom —
-   the shadow is ink-based. */
+/* Stronger glass for the dock: same refraction, but enough tint and blur
+   to separate from whatever it floats over. */
 .liquid-glass--strong {
+  --glass-blur: 10px;
   background: color-mix(in srgb, var(--surface) 55%, transparent);
-  -webkit-backdrop-filter: blur(10px) saturate(1.8);
-  backdrop-filter: blur(10px) saturate(1.8);
   border-color: color-mix(in srgb, var(--line) 95%, transparent);
-  /* box-shadow: 0 10px 28px color-mix(in srgb, var(--ink) 22%, transparent); */
 }

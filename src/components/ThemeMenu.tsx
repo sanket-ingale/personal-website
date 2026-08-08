@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Moon, Palette, Sun } from "lucide-react";
+import { applyAccent, setTheme as setThemeShared, useTheme } from "@/lib/useTheme";
 
 const PRESETS = [
   { name: "Orange", value: "#f97316" }, // default
@@ -9,16 +10,13 @@ const PRESETS = [
   { name: "Rose", value: "#f43f5e" },
 ];
 
-export const DEFAULT_ACCENT = PRESETS[0].value;
-
-export function applyAccent(color: string) {
-  document.documentElement.style.setProperty("--accent", color);
-}
-
 /**
  * Theme dropdown: light/dark switch (View Transitions ink sweep) plus an
  * accent color picker — presets and a custom swatch. Both persist to
- * localStorage and are re-applied before first paint in main.tsx.
+ * localStorage and are re-applied before first paint in main.tsx. State
+ * comes from the shared `useTheme` store (src/lib/useTheme.ts) since both
+ * the header and mobile dock keep their own `ThemeMenu` instance mounted
+ * at once — a shared store keeps whichever one is hidden from going stale.
  */
 export function ThemeMenu({
   drop = "down",
@@ -26,12 +24,7 @@ export function ThemeMenu({
   drop?: "down" | "up";
 }) {
   const [open, setOpen] = useState(false);
-  const [dark, setDark] = useState(() =>
-    document.documentElement.classList.contains("dark")
-  );
-  const [accent, setAccent] = useState(
-    () => localStorage.getItem("accent") ?? DEFAULT_ACCENT
-  );
+  const { dark, accent } = useTheme();
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close on outside click / Escape.
@@ -50,44 +43,6 @@ export function ThemeMenu({
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
-
-  const setTheme = (next: boolean, e: React.MouseEvent) => {
-    if (next === dark) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const flip = () => {
-      document.documentElement.classList.toggle("dark", next);
-      setDark(next);
-      localStorage.setItem("theme", next ? "dark" : "light");
-    };
-
-    if (!document.startViewTransition || reduced) {
-      flip();
-      return;
-    }
-    const x = e.clientX || window.innerWidth - 40;
-    const y = e.clientY || 40;
-    const r = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
-    );
-    const transition = document.startViewTransition(flip);
-    transition.ready.then(() => {
-      document.documentElement.animate(
-        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
-        {
-          duration: 500,
-          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-          pseudoElement: "::view-transition-new(root)",
-        }
-      );
-    });
-  };
-
-  const pickAccent = (color: string) => {
-    setAccent(color);
-    applyAccent(color);
-    localStorage.setItem("accent", color);
-  };
 
   return (
     <div className="relative shrink-0" ref={menuRef}>
@@ -110,7 +65,7 @@ export function ThemeMenu({
           <div className="grid grid-cols-2 gap-1.5">
             <button
               type="button"
-              onClick={(e) => setTheme(false, e)}
+              onClick={(e) => setThemeShared(false, e)}
               className={`inline-flex items-center justify-center gap-1.5 rounded-md border px-2 py-1.5 font-mono text-xs transition-colors ${!dark ? "border-signal text-signal" : "border-line text-muted hover:border-signal/50"
                 }`}
             >
@@ -118,7 +73,7 @@ export function ThemeMenu({
             </button>
             <button
               type="button"
-              onClick={(e) => setTheme(true, e)}
+              onClick={(e) => setThemeShared(true, e)}
               className={`inline-flex items-center justify-center gap-1.5 rounded-md border px-2 py-1.5 font-mono text-xs transition-colors ${dark ? "border-signal text-signal" : "border-line text-muted hover:border-signal/50"
                 }`}
             >
@@ -134,7 +89,7 @@ export function ThemeMenu({
                 type="button"
                 title={p.name}
                 aria-label={`${p.name} accent`}
-                onClick={() => pickAccent(p.value)}
+                onClick={() => applyAccent(p.value)}
                 className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-line"
                 style={{ background: p.value }}
               >
@@ -149,7 +104,7 @@ export function ThemeMenu({
               <input
                 type="color"
                 value={accent}
-                onChange={(e) => pickAccent(e.target.value)}
+                onChange={(e) => applyAccent(e.target.value)}
                 className="absolute inset-0 cursor-pointer opacity-0"
                 aria-label="Custom accent color"
               />

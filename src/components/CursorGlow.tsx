@@ -30,7 +30,7 @@ export function CursorGlow() {
     let raf = 0;
     let running = false;
     let visible = false;
-    let touchFade: ReturnType<typeof setTimeout>;
+    let touchFade: ReturnType<typeof setTimeout> | undefined;
     let downAt = 0;
     let downX = 0;
     let downY = 0;

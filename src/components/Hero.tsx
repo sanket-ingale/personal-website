@@ -1,5 +1,7 @@
 import { profile } from "@/data/content";
 import { LocalTime } from "@/components/Footer";
+import { MeshCanvas } from "@/components/MeshCanvas";
+import { ThemeMenu } from "@/components/ThemeMenu";
 import { NAV_SECTIONS, useScrollSpy, useSlidingIndicator } from "@/lib/useScrollSpy";
 
 export function smoothScrollTo(e: React.MouseEvent<HTMLAnchorElement>) {
@@ -12,11 +14,9 @@ export function smoothScrollTo(e: React.MouseEvent<HTMLAnchorElement>) {
   target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   history.pushState(null, "", hash);
 }
-import { MeshCanvas } from "@/components/MeshCanvas";
-import { ThemeMenu } from "@/components/ThemeMenu";
 
 export function Header() {
-  const active = useScrollSpy(NAV_SECTIONS);
+  const active = useScrollSpy();
   const { register, style } = useSlidingIndicator(active);
   return (
     <header

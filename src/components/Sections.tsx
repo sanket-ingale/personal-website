@@ -8,8 +8,8 @@ export function About() {
   return (
     <Section id="about" label="ABOUT">
       <div className="space-y-4 text-[0.95rem] leading-relaxed text-ink sm:text-base">
-        {profile.about.map((p) => (
-          <p key={p.slice(0, 24)}>{p}</p>
+        {profile.about.map((p, i) => (
+          <p key={i}>{p}</p>
         ))}
       </div>
     </Section>
@@ -34,9 +34,9 @@ export function Work() {
             </p>
             {/* Desktop: always expanded */}
             <ul className="mt-4 hidden space-y-2 sm:block">
-              {p.highlights.map((h) => (
+              {p.highlights.map((h, i) => (
                 <li
-                  key={h.slice(0, 24)}
+                  key={i}
                   className="border-l border-line pl-3 text-sm leading-relaxed text-ink transition-colors group-hover:border-signal/40"
                 >
                   {h}
@@ -53,9 +53,9 @@ export function Work() {
                 />
               </summary>
               <ul className="mt-3 space-y-2">
-                {p.highlights.map((h) => (
+                {p.highlights.map((h, i) => (
                   <li
-                    key={h.slice(0, 24)}
+                    key={i}
                     className="border-l border-line pl-3 text-sm leading-relaxed text-ink"
                   >
                     {h}
@@ -87,8 +87,8 @@ export function Experience() {
                 {r.title} · {r.company}
               </h3>
               <ul className="mt-2 space-y-1.5">
-                {r.points.map((pt) => (
-                  <li key={pt.slice(0, 24)} className="text-sm leading-relaxed text-muted">
+                {r.points.map((pt, i) => (
+                  <li key={i} className="text-sm leading-relaxed text-muted">
                     {pt}
                   </li>
                 ))}

@@ -9,7 +9,7 @@ import { NAV_SECTIONS, useScrollSpy, useSlidingIndicator } from "@/lib/useScroll
  */
 export function MobileDock() {
   const glassRef = useLiquidGlass<HTMLDivElement>(undefined, 10);
-  const active = useScrollSpy(NAV_SECTIONS);
+  const active = useScrollSpy();
   const { register, style } = useSlidingIndicator(active);
   return (
     <nav
@@ -41,7 +41,6 @@ export function MobileDock() {
             </a>
           ))}
         </div>
-        {/* <span aria-hidden="true" className="h-5 w-px shrink-0 bg-line" /> */}
         <ThemeMenu drop="up" />
       </div>
     </nav>

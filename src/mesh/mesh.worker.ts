@@ -7,7 +7,10 @@ import { MeshSim, type MeshTheme } from "./sim";
 
 let sim: MeshSim | null = null;
 let running = false;
-let rafId: number | ReturnType<typeof setTimeout> = 0;
+// Tagged by how the id was produced, so cancellation can never desync from
+// hasRAF even if a future edit decouples the two checks.
+let rafId: { kind: "raf"; id: number } | { kind: "timeout"; id: ReturnType<typeof setTimeout> } | null =
+  null;
 
 const hasRAF = typeof requestAnimationFrame === "function";
 
@@ -15,7 +18,9 @@ function loop() {
   if (!sim || !running) return;
   sim.step();
   sim.render();
-  rafId = hasRAF ? requestAnimationFrame(loop) : setTimeout(loop, 16);
+  rafId = hasRAF
+    ? { kind: "raf", id: requestAnimationFrame(loop) }
+    : { kind: "timeout", id: setTimeout(loop, 16) };
 }
 
 function start() {
@@ -26,8 +31,9 @@ function start() {
 
 function stop() {
   running = false;
-  if (hasRAF) cancelAnimationFrame(rafId as number);
-  else clearTimeout(rafId as ReturnType<typeof setTimeout>);
+  if (rafId?.kind === "raf") cancelAnimationFrame(rafId.id);
+  else if (rafId?.kind === "timeout") clearTimeout(rafId.id);
+  rafId = null;
 }
 
 type Msg =

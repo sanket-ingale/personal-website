@@ -1,45 +1,73 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+
+export const NAV_SECTIONS = ["about", "experience", "work", "skills", "contact"] as const;
 
 /**
- * Tracks which of the given section ids currently occupies the middle band
- * of the viewport. Returns null when none of them does (e.g. while reading
- * a section that has no quick link).
+ * Tracks which of NAV_SECTIONS currently occupies the middle band of the
+ * viewport, via a single shared IntersectionObserver. `Header` and
+ * `MobileDock` both keep a nav mounted at all times (toggled only by CSS
+ * breakpoint) and both watch the exact same sections, so this is a module-
+ * level store rather than a per-component observer — one IntersectionObserver
+ * for the whole app instead of two doing identical work.
  */
-export function useScrollSpy(ids: readonly string[]) {
-  const [active, setActive] = useState<string | null>(null);
+let active: string | null = null;
+const listeners = new Set<() => void>();
+let observer: IntersectionObserver | null = null;
 
-  useEffect(() => {
-    const els = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => !!el);
-    if (!els.length) return;
+function ensureObserver() {
+  if (observer) return;
+  const els = NAV_SECTIONS.map((id) => document.getElementById(id)).filter(
+    (el): el is HTMLElement => !!el
+  );
+  if (!els.length) return;
 
-    const inView = new Set<string>();
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) inView.add(e.target.id);
-          else inView.delete(e.target.id);
-        }
-        // Deterministic pick: the last id (in nav order) currently in band.
-        const current = [...ids].reverse().find((id) => inView.has(id)) ?? null;
-        setActive(current);
-      },
-      // A band around the viewport's middle: a section is "active" while
-      // it crosses it.
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [ids]);
+  const inView = new Set<string>();
+  observer = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) inView.add(e.target.id);
+        else inView.delete(e.target.id);
+      }
+      // Deterministic pick: the last id (in nav order) currently in band.
+      const current = [...NAV_SECTIONS].reverse().find((id) => inView.has(id)) ?? null;
+      if (current !== active) {
+        active = current;
+        listeners.forEach((listener) => listener());
+      }
+    },
+    // A band around the viewport's middle: a section is "active" while
+    // it crosses it.
+    { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+  );
+  els.forEach((el) => observer!.observe(el));
+}
 
+function subscribe(listener: () => void) {
+  ensureObserver();
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+    if (listeners.size === 0 && observer) {
+      observer.disconnect();
+      observer = null;
+    }
+  };
+}
+
+function getSnapshot() {
   return active;
+}
+
+export function useScrollSpy() {
+  return useSyncExternalStore(subscribe, getSnapshot);
 }
 
 /**
  * Sliding highlight pill: measures the active link and returns a style for
  * an absolutely-positioned indicator that glides between links via CSS
- * transitions. Container must be position: relative.
+ * transitions. Container must be position: relative. Unlike useScrollSpy,
+ * this stays per-instance — Header and MobileDock render distinct DOM nodes
+ * for their nav links, so each needs its own measurements.
  */
 export function useSlidingIndicator(active: string | null) {
   const refs = useRef<Record<string, HTMLElement | null>>({});
@@ -72,15 +100,25 @@ export function useSlidingIndicator(active: string | null) {
       }
     };
     measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
   }, [active]);
 
-  const register = (id: string) => (el: HTMLElement | null) => {
-    refs.current[id] = el;
-  };
+  const register = useCallback(
+    (id: string) => (el: HTMLElement | null) => {
+      refs.current[id] = el;
+    },
+    []
+  );
 
   return { register, style };
 }
-
-export const NAV_SECTIONS = ["about", "experience", "work", "skills", "contact"] as const;
