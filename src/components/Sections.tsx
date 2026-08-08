@@ -172,7 +172,7 @@ export function Contact() {
             </div>
           </div>
         </div>
-        <div className="order-2 border-t sm:border-none border-line pt-6">
+        <div className="order-2 border-t sm:border-none border-line pt-6 sm:pt-0">
           <TicTacToe />
         </div>
         <footer className="order-3 border-t border-line pt-6 sm:col-span-2 sm:pt-8">
