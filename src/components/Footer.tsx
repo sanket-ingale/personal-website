@@ -4,7 +4,7 @@ import { profile } from "@/data/content";
 /**
  * Shared minute-aligned clock. `LocalTime` is mounted once in the desktop
  * header and once in the Contact footer (only one visible at a time per
- * breakpoint, but both stay mounted) — one shared timer instead of two
+ * breakpoint, but both stay mounted), so one shared timer instead of two
  * independent ones ticking on their own schedules.
  */
 let now = Date.now();
@@ -46,7 +46,7 @@ function useMinuteClock() {
   return useSyncExternalStore(subscribe, getSnapshot);
 }
 
-/** Live local time — tells visitors your timezone at the moment they reach out. */
+/** Live local time. Tells visitors your timezone at the moment they reach out. */
 export function LocalTime({
   inFooter = false,
 }: {
@@ -63,7 +63,7 @@ export function LocalTime({
 
   return (
     <span className={`${inFooter && "hidden sm:inline-block"} telemetry`}>
-      {profile.location} — {time} IST
+      {profile.location} · {time} IST
     </span>
   );
 }

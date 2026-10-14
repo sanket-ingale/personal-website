@@ -75,7 +75,7 @@ export function setTheme(next: boolean, e?: { clientX?: number; clientY?: number
  * source of truth. `Header` and `MobileDock` both keep a `ThemeMenu`
  * mounted at all times (toggled only by CSS breakpoint), so without a
  * shared store the hidden instance's own `useState` would go stale until
- * it remounted — every instance calling this hook re-renders together.
+ * it remounted. Every instance calling this hook re-renders together.
  */
 export function useTheme() {
   return useSyncExternalStore(subscribe, getSnapshot);

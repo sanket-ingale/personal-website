@@ -12,11 +12,11 @@ const PRESETS = [
 
 /**
  * Theme dropdown: light/dark switch (View Transitions ink sweep) plus an
- * accent color picker — presets and a custom swatch. Both persist to
+ * accent color picker (presets and a custom swatch). Both persist to
  * localStorage and are re-applied before first paint in main.tsx. State
  * comes from the shared `useTheme` store (src/lib/useTheme.ts) since both
  * the header and mobile dock keep their own `ThemeMenu` instance mounted
- * at once — a shared store keeps whichever one is hidden from going stale.
+ * at once, so a shared store keeps whichever one is hidden from going stale.
  */
 export function ThemeMenu({
   drop = "down",

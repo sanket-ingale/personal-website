@@ -168,7 +168,7 @@ export function MeshCanvas({ className }: { className?: string }) {
     }
 
     // Resize (canvas control is transferred, so size messages go to the sim).
-    // Only reseed on width changes — mobile URL-bar show/hide fires
+    // Only reseed on width changes, since mobile URL-bar show/hide fires
     // height-only resizes that would otherwise reset the mesh mid-scroll.
     let lastW = wrap.clientWidth;
     const ro = new ResizeObserver(() => {

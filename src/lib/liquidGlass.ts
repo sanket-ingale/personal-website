@@ -4,14 +4,14 @@ import { useEffect, useRef } from "react";
  * Real liquid-glass refraction, ported from our displacement-map glass box:
  * a rounded-rect signed-distance-field is rendered to a canvas, encoded as
  * a normal map (R = x-shift, G = y-shift), and fed to an SVG
- * feDisplacementMap referenced via `backdrop-filter: url(#...)` — the
+ * feDisplacementMap referenced via `backdrop-filter: url(#...)`, so the
  * backdrop genuinely bends at the element's edges.
  *
  * Lessons kept from that build: fade band = 30% of the smaller dimension
  * and modest scale, so displacement never exceeds the band (the fold
- * artifact); smoothstep falloff so the refraction hugs the rim.
+ * artifact), with smoothstep falloff so the refraction hugs the rim.
  *
- * SVG-filter backdrops are Chromium-only; elsewhere this attaches nothing
+ * SVG-filter backdrops are Chromium-only. Elsewhere this attaches nothing
  * and the CSS blur/saturate fallback carries the look.
  */
 

@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------------------------------- */
-/* Design tokens — "control plane"    */
+/* Design tokens: "control plane"     */
 /* ---------------------------------- */
 :root {
   --accent: #f97316;
@@ -88,7 +88,7 @@ body {
   animation: pulse-ring 2.4s ease-in-out infinite;
 }
 
-/* Shared by .status-dot--pulse and .ttt-winner-cell — a box-shadow ring
+/* Shared by .status-dot--pulse and .ttt-winner-cell: a box-shadow ring
    that blooms out and fades, parameterized by color/spread/timing. */
 @keyframes pulse-ring {
 
@@ -150,7 +150,7 @@ body {
 }
 
 /* ---------------------------------- */
-/* View Transitions — theme sweep     */
+/* View Transitions: theme sweep     */
 /* ---------------------------------- */
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -176,7 +176,7 @@ body {
   }
 
   /* JS already never creates .tap-pulse elements under reduced motion
-     (CursorGlow.tsx); this is a defensive CSS backstop. */
+     (CursorGlow.tsx), so this is a defensive CSS backstop. */
   .tap-pulse {
     animation: none;
   }
@@ -414,7 +414,7 @@ body {
 
 /* ---------------------------------- */
 /* Liquid Glass (header bar + dock)   */
-/* Transparent; Chromium gets true    */
+/* Transparent. Chromium gets true    */
 /* edge refraction via JS-built       */
 /* feDisplacementMap (liquidGlass.ts) */
 /* ---------------------------------- */

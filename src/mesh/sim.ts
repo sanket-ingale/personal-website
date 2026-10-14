@@ -1,5 +1,5 @@
 /**
- * Network mesh fidget — Verlet integration spring physics.
+ * Network mesh fidget: Verlet integration spring physics.
  * Pure module: no DOM assumptions beyond a 2D canvas context,
  * so it runs identically inside a Web Worker (OffscreenCanvas)
  * or on the main thread as a fallback.
@@ -98,7 +98,7 @@ export class MeshSim {
         .map((n, j) => ({ j, d: (n.hx - this.nodes[i].hx) ** 2 + (n.hy - this.nodes[i].hy) ** 2 }))
         .filter((e) => e.j !== i)
         .sort((a, b) => a.d - b.d)
-        .slice(0, 3); // 3 nearest neighbours — denser, more complex web
+        .slice(0, 3); // 3 nearest neighbours for a denser, more complex web
       for (const { j, d } of dists) {
         const key = i < j ? `${i}-${j}` : `${j}-${i}`;
         if (seen.has(key)) continue;
@@ -263,7 +263,7 @@ export class MeshSim {
 
   /**
    * Heartbeat pulse: a wavefront leaves the signal node and travels the
-   * mesh along its edges — packets run the wires, nodes flash as it
+   * mesh along its edges: packets run the wires, nodes flash as it
    * arrives. Two fronts per cycle (lub-DUB), then a rest.
    */
   private renderPulse() {

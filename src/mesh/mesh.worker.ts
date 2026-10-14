@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 /**
- * Mesh worker — receives an OffscreenCanvas via transferControlToOffscreen()
+ * Mesh worker. Receives an OffscreenCanvas via transferControlToOffscreen()
  * and runs physics + rendering entirely off the main thread.
  */
 import { MeshSim, type MeshTheme } from "./sim";

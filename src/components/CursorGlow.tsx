@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
  * - Spotlight surfaces ([data-spotlight], e.g. cards and game tiles) get
  *   local glow coordinates for their own clipped glow, and sit above this
  *   global lens in z-index so their background occludes it naturally.
- * - Touch: follows the finger, fades on lift; quick tap fires a pulse ring.
+ * - Touch: follows the finger, fades on lift, and a quick tap fires a pulse ring.
  * - prefers-reduced-motion: static lens follows the pointer directly,
  *   no loop, no breathing, no pulses.
  */
@@ -49,7 +49,7 @@ export function CursorGlow() {
       cx += dx * 0.16;
       cy += dy * 0.16;
 
-      // Velocity flare: fast cursor -> wide bright lens; settle when still.
+      // Velocity flare: fast cursor -> wide bright lens, settling when still.
       const speed = Math.hypot(dx, dy);
       const flare = Math.min(90, speed * 0.9);
       // Idle breathing once the lens has caught up.
@@ -99,7 +99,7 @@ export function CursorGlow() {
       // Spotlight surfaces (cards, game tiles, header): local coordinates
       // for their own clipped ::after glow. They sit above this global
       // lens in z-index (see [data-spotlight] in index.css), so their own
-      // opaque background naturally occludes it — no need to hide it.
+      // opaque background naturally occludes it, so there's no need to hide it.
       const spot = (e.target as Element | null)?.closest?.("[data-spotlight]") as HTMLElement | null;
       if (spot) {
         const r = spot.getBoundingClientRect();

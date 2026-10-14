@@ -7,7 +7,7 @@ export const NAV_SECTIONS = ["about", "experience", "work", "skills", "contact"]
  * viewport, via a single shared IntersectionObserver. `Header` and
  * `MobileDock` both keep a nav mounted at all times (toggled only by CSS
  * breakpoint) and both watch the exact same sections, so this is a module-
- * level store rather than a per-component observer — one IntersectionObserver
+ * level store rather than a per-component observer: one IntersectionObserver
  * for the whole app instead of two doing identical work.
  */
 let active: string | null = null;
@@ -66,7 +66,7 @@ export function useScrollSpy() {
  * Sliding highlight pill: measures the active link and returns a style for
  * an absolutely-positioned indicator that glides between links via CSS
  * transitions. Container must be position: relative. Unlike useScrollSpy,
- * this stays per-instance — Header and MobileDock render distinct DOM nodes
+ * this stays per-instance, since Header and MobileDock render distinct DOM nodes
  * for their nav links, so each needs its own measurements.
  */
 export function useSlidingIndicator(active: string | null) {

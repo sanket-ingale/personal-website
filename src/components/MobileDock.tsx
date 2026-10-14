@@ -20,7 +20,7 @@ export function MobileDock() {
         ref={glassRef}
         className="max-w-[85%] liquid-glass liquid-glass--strong flex items-center gap-1 rounded-full py-1.5 pl-2 pr-1.5"
       >
-        {/* Tabs scroll inside this clip; the theme button sits outside it. */}
+        {/* Tabs scroll inside this clip, and the theme button sits outside it. */}
         <div className="dock-fade relative flex items-center gap-1 overflow-x-auto [scrollbar-width:none]">
           <span
             aria-hidden="true"

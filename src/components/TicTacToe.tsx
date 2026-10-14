@@ -34,7 +34,7 @@ function emptyCells(board: Cell[]) {
   return board.reduce<number[]>((acc, cell, i) => (cell === null ? [...acc, i] : acc), []);
 }
 
-/** Win > block > center > corner > random — beatable on purpose. */
+/** Win > block > center > corner > random. Beatable on purpose. */
 function getCpuMove(board: Cell[]): number {
   const open = emptyCells(board);
   for (const i of open) {
