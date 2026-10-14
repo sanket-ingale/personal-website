@@ -146,7 +146,7 @@ export function Contact() {
               Let's build something.
             </h2>
             <p className="mt-4 max-w-md text-muted">
-              Open to full-stack problems involving dense data and demanding users.
+              Happy to chat about new roles or interesting projects.
             </p>
           </div>
           <div>

@@ -1,13 +1,13 @@
 /**
- * All site content lives here. Edit this file to update the website;
- * no component changes needed.
+ * All site content lives here. Edit this file to update the website.
+ * No component changes needed.
  */
 
 export const profile = {
   name: "Sanket Ingale",
   title: "Senior Software Engineer",
   tagline:
-    "Full-stack engineer building control planes for networks, compliance, and AI platforms.",
+    "Full-stack engineer working on network, compliance and AI products.",
   location: "Pune, IN",
   email: "sanket.ingale1998@gmail.com",
   links: [
@@ -16,8 +16,8 @@ export const profile = {
     { label: "Instagram", href: "https://www.instagram.com/lightbuster_/" },
   ],
   about: [
-    "I build the interfaces that operators rely on to run complex systems: private cellular networks, compliance platforms, and AI governance tools. My work runs from orchestration dashboards and real-time visualizations down to the APIs and data flows behind them.",
-    "Over five years across startups and enterprise teams, I've led product engineering end to end (architecture, component libraries, APIs, performance, and mentoring) across React, TypeScript, Node, and Python."
+    "I build web apps for teams that manage private cellular networks, financial compliance and AI security. That covers everything from dashboards, data-heavy tables and visualizations to the APIs and data behind them.",
+    "I've been doing this for over five years at startups and larger companies. I work across React, TypeScript, Node and Python."
   ],
 };
 
@@ -34,12 +34,12 @@ export const projects: Project[] = [
     id: "network-orchestration",
     name: "Private cellular network orchestration platform",
     summary:
-      "Enterprise platform for orchestrating private 5G/LTE networks: radios, edges, and sites managed from a single control plane.",
+      "A platform for managing private 5G and LTE networks, including radios, edge devices and sites, all in one place.",
     highlights: [
-      "Designed a centralized RBAC module on CASL, replacing scattered per-component permission checks with a single declarative ability layer wired through the app.",
-      "Built radio and edge management UIs: advanced table architecture with grouped-row expansion, filter persistence, and URL-driven selection across refreshes.",
-      "Developed floorplan-based radio visualization with placement pins, walk-test overlays, and PDF exports with metric heatmaps aligned to on-screen markers.",
-      "Maintained the shared component library powering multiple products: table contexts, steppers, dialogs, and date-time selectors with Storybook coverage.",
+      "Moved permission checks that were spread across components into one RBAC setup built on CASL.",
+      "Built the radio and edge management screens, with grouped tables, saved filters and selections that stay in the URL after a refresh.",
+      "Built a floorplan view that shows where radios are placed, with walk-test overlays and PDF exports that include signal heatmaps.",
+      "Looked after the shared component library used by several products, with tables, steppers, dialogs and date pickers documented in Storybook.",
     ],
     tech: ["React", "TypeScript", "Redux Toolkit", "MUI X", "CASL", "Highcharts", "Storybook"],
   },
@@ -47,12 +47,12 @@ export const projects: Project[] = [
     id: "compliance-platform",
     name: "Financial compliance & reporting platform",
     summary:
-      "Modernized the UI of a compliance product certified by XBRL International, from legacy screens to a coherent, scalable design system.",
+      "Rebuilt the UI of an XBRL International certified compliance product, replacing old screens with a proper design system.",
     highlights: [
-      "Revamped the platform with React and Shadcn, improving design consistency across modules.",
-      "Designed a Google Docs–inspired folder and document management system with user/group access controls.",
-      "Built a rich document editor on Lexical supporting HTML, TXT, DOC, and JSON with extensible plugins.",
-      "Cut build times by 40% through modularization and dead-dependency removal.",
+      "Moved the app to React and Shadcn so every module looks and behaves the same.",
+      "Built folder and document management similar to Google Docs, with access control for users and groups.",
+      "Built a document editor on Lexical that works with HTML, TXT, DOC and JSON files and supports plugins.",
+      "Cut build times by 40% by splitting the code into modules and removing unused dependencies.",
     ],
     tech: ["React", "TypeScript", "Shadcn", "Lexical", "Zustand"],
   },
@@ -60,11 +60,11 @@ export const projects: Project[] = [
     id: "genai-governance",
     name: "Gen AI governance & security platform",
     summary:
-      "Enterprise platform giving compliance and security teams visibility into Gen AI components: LLMs, agents, datastores, and endpoints across multi-cloud environments.",
+      "A platform that helps security and compliance teams keep track of the LLMs, agents, datastores and endpoints their company uses across different clouds.",
     highlights: [
-      "Built interactive dashboards and data visualizations for interpreting structured and unstructured datasets.",
-      "Integrated frontend interfaces with internal and third-party APIs across communication and document platforms.",
-      "Contributed to the internal design system, establishing standards for consistency and accessibility.",
+      "Built dashboards and charts that make large amounts of data easier to understand.",
+      "Connected the app to internal APIs and to third-party messaging and document tools.",
+      "Worked on the internal design system and helped set rules for consistency and accessibility.",
     ],
     tech: ["React", "TypeScript", "D3.js", "Chart.js"],
   },
@@ -72,11 +72,11 @@ export const projects: Project[] = [
     id: "agritech-erp",
     name: "Seed-to-sale agritech ERP",
     summary:
-      "ERP for regulated agriculture: compliance, sales, production, and inventory with multi-site visibility.",
+      "An ERP for regulated agriculture that handles compliance, sales, production and inventory across multiple sites.",
     highlights: [
-      "Architected a real-time inventory dashboard on WebSockets, streamlining supply-chain visibility and reducing manual reconciliation.",
-      "Engineered demand-alert mechanisms surfacing market trends to stakeholders in real time.",
-      "Implemented CI/CD pipelines for zero-drama releases.",
+      "Built a live inventory dashboard using WebSockets so teams no longer had to match stock numbers by hand.",
+      "Added demand alerts that tell people about market changes as they happen.",
+      "Set up CI/CD pipelines so releases went out smoothly.",
     ],
     tech: ["React", "Node.js", "GraphQL", "WebSockets"],
   },
@@ -84,10 +84,10 @@ export const projects: Project[] = [
     id: "dataviz-library",
     name: "Reusable data visualization library",
     summary:
-      "Dynamic charting components built on D3 and Chart.js, integrated across React dashboards.",
+      "Chart components built on D3 and Chart.js and used across our React dashboards.",
     highlights: [
-      "Cut chart integration effort by 50%, enabling faster delivery of reporting features across products.",
-      "Built a 3D model-tagging web experience with Three.js for advanced dataset visualization.",
+      "Cut the effort needed to add charts by 50%, so reporting features shipped faster.",
+      "Built a Three.js tool for tagging 3D models in the browser.",
     ],
     tech: ["D3.js", "Chart.js", "Three.js", "React"],
   },
@@ -106,9 +106,9 @@ export const experience: Role[] = [
     title: "Senior Software Engineer",
     period: "Aug 2023 – present",
     points: [
-      "Leading frontend work across enterprise platforms: network orchestration, compliance, and AI governance.",
-      "Owning frontend architecture end to end, from access-control layers and state management to the shared component library used across multiple products.",
-      "Turning complex domain data into operator-facing tools: real-time dashboards, visualizations, and document workflows with fine-grained access control.",
+      "Lead development on our network management, compliance and AI security products.",
+      "Make the main technical decisions, from how data moves between the API and the app to permissions and the component library shared across products.",
+      "Build features all the way from the API to the screens people use every day to manage networks, documents and reports.",
     ],
   },
   {
@@ -116,8 +116,8 @@ export const experience: Role[] = [
     title: "Software Engineer",
     period: "Sept 2022 – Jun 2023",
     points: [
-      "Engineered project modules from inception to deployment across ERP, OBE, and academic platforms.",
-      "Led a team of developers for key modules with scalable React + Redux architecture.",
+      "Built modules from start to release for ERP, OBE and academic products.",
+      "Led a small team of developers on key modules built with React and Redux.",
     ],
   },
   {
@@ -125,8 +125,8 @@ export const experience: Role[] = [
     title: "Associate Software Engineer",
     period: "Feb 2021 – Sept 2022",
     points: [
-      "Built a responsive phonebook application for a UK-based bank with reusable, scalable UI components.",
-      "Integrated third-party vendor APIs to extend application functionality.",
+      "Built a responsive phonebook app for a UK bank using reusable UI components.",
+      "Connected the app to third-party vendor APIs to add new features.",
     ],
   },
 ];
